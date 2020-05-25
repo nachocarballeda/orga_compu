@@ -99,7 +99,7 @@ int main (int argc, char *argv[])
   while ((read = getline(&line, &len, f_in)) != -1) {
     array_num = (int*) malloc((read/sizeof(char)/2)*sizeof(int));
     amount = tp1_line_to_array(line, array_num, read/sizeof(char));
-    tp1_merge_sort(array_num, amount);
+    merge_sort(array_num, amount);
     tp1_write_array_in_file(array_num, amount, f_out);
   }
 
@@ -129,7 +129,7 @@ void tp1_print_array(int A[], int size)
   printf("\n");
 }
 
-void tp1_merge_sort(int *vec, size_t len)
+/* void merge_sort(int *vec, size_t len)
 {
     if (len > 1)
     {
@@ -161,6 +161,7 @@ void tp1_merge_sort(int *vec, size_t len)
         free(right);
     }
 }
+*/
 
 int numDigits(int n) {
   if (n < 0)

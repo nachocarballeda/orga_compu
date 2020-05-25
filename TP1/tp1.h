@@ -22,7 +22,7 @@ char tp1_version[] = "0.0.1";
 void  tp1_print_array(int A[], int size);
 
 /** Performs a merge sort op */
-void  tp1_merge_sort(int *vec, size_t len);
+extern void merge_sort(int *vec, size_t len);
 
 /** Writes down the given array into a file */
 void  tp1_write_array_in_file(int *num, int size, FILE* file);
