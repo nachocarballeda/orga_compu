@@ -129,40 +129,6 @@ void tp1_print_array(int A[], int size)
   printf("\n");
 }
 
-/* void merge_sort(int *vec, size_t len)
-{
-    if (len > 1)
-    {
-        int mid = len / 2;
-        int *left = (int *)malloc(mid * sizeof(int));
-        int *right = (int *)malloc((len - mid) * sizeof(int));
-        for (int i = 0; i < mid; i++)
-            left[i] = vec[i];
-        for (int i = mid; i < len; i++)
-            right[i - mid] = vec[i];
-        tp1_merge_sort(left, mid);
-        tp1_merge_sort(right, len - mid);
-        int i, j, k;
-        i = 0;
-        j = 0;
-        k = 0;
-        while (i < mid && j < len - mid)
-        {
-            if (left[i] < right[j])
-                vec[k++] = left[i++];
-            else
-                vec[k++] = right[j++];
-        }
-        while (i < mid)
-            vec[k++] = left[i++];
-        while (j < len - mid)
-            vec[k++] = right[j++];
-        free(left);
-        free(right);
-    }
-}
-*/
-
 int numDigits(int n) {
   if (n < 0)
     return 1 + numDigits(abs(n));
