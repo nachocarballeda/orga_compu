@@ -7,6 +7,8 @@
 
 static int input_flag = 0, output_flag = 0;
 
+void tp1_write_array_to_stdout(int *num, int size);
+
 int main(int argc, char *argv[])
 {
   FILE *f_in;
@@ -67,30 +69,20 @@ int main(int argc, char *argv[])
       abort();
     }
   }
+  
+  if(input_flag)
+    f_in = fopen(filename_in, "r");
 
-  if (!input_flag || !output_flag)
-  {
-    fprintf(stdout, "Please insert %s%s%s file%s, use -h or --help to see the help menu.\n",
-            !input_flag ? "input" : "", (!input_flag && !output_flag) ? " & " : "", !output_flag ? "output" : "",
-            (!input_flag && !output_flag) ? "s" : "");
+  if(output_flag)
+    f_out = fopen(filename_out, "w");
+
+  if(input_flag && f_in == NULL) {
+    fprintf(stderr, "Input file '%s' does not exist.\n", filename_in);
     return 1;
   }
 
-  /* Print any remaining command line arguments (not options). */
-  if (optind < argc)
-  {
-    printf("non-option ARGV-elements: ");
-    while (optind < argc)
-      printf("%s ", argv[optind++]);
-    putchar('\n');
-  }
-
-  f_in = fopen(filename_in, "r");
-  f_out = fopen(filename_out, "w");
-
-  if (f_in == NULL)
-  {
-    fprintf(stderr, "Input file '%s' does not exist.\n", filename_in);
+  if(output_flag && f_out == NULL) {
+    fprintf(stderr, "Output file '%s' does not exist.\n", filename_out);
     return 1;
   }
 
@@ -99,15 +91,19 @@ int main(int argc, char *argv[])
   size_t len = 0;
   int amount = 0;
 
+  if(!input_flag)
+    f_in = stdin;
+
   while ((read = getline(&line, &len, f_in)) != -1)
   {
     array_num = (int *)malloc((read / sizeof(char) / 2) * sizeof(int));
     amount = tp1_line_to_array(line, array_num, read / sizeof(char));
     if (amount != -1) {
       merge_sort(array_num, amount);
-      tp1_write_array_in_file(array_num, amount, f_out);
+      if(output_flag) tp1_write_array_in_file(array_num, amount, f_out);
+      else tp1_write_array_to_stdout(array_num, amount);
     } else {
-      fprintf(stderr, "HAY ERRORES EN LA ENTRADA, NO SE ASEGURA UNA SALIDA CORRECTA\n");
+      fprintf(stderr, "There are errors in the input, cant ensure a valid output\n");
     }
   }
 
@@ -121,12 +117,20 @@ int main(int argc, char *argv[])
 void tp1_write_array_in_file(int *num, int size, FILE *file)
 {
   int i = 0;
-  for (; i < size; i++)
-  {
+  for (; i < size; i++) {
     fprintf(file, "%d", num[i]);
     fputc(' ', file);
   }
   fputc('\n', file);
+}
+
+void tp1_write_array_to_stdout(int *num, int size)
+{
+  int i = 0;
+  for (; i < size; i++) {
+    fprintf(stdout, "%d", num[i]);
+    fputc(' ', stdout);
+  }
 }
 
 void tp1_print_array(int A[], int size)
