@@ -107,7 +107,7 @@ int main(int argc, char *argv[])
       merge_sort(array_num, amount);
       tp1_write_array_in_file(array_num, amount, f_out);
     } else {
-      fprintf(f_out, "ERROR AL LEER LA LINEA\n");
+      fprintf(stderr, "HAY ERRORES EN LA ENTRADA, NO SE ASEGURA UNA SALIDA CORRECTA\n");
     }
   }
 
