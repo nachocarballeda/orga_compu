@@ -7,8 +7,6 @@
 
 static int input_flag = 0, output_flag = 0;
 
-void tp1_write_array_to_stdout(int *num, int size);
-
 int main(int argc, char *argv[])
 {
   FILE *f_in;
@@ -72,9 +70,13 @@ int main(int argc, char *argv[])
   
   if(input_flag)
     f_in = fopen(filename_in, "r");
+  else
+    f_in = stdin;
 
   if(output_flag)
     f_out = fopen(filename_out, "w");
+  else
+    f_out = stdout;
 
   if(input_flag && f_in == NULL) {
     fprintf(stderr, "Input file '%s' does not exist.\n", filename_in);
@@ -91,8 +93,6 @@ int main(int argc, char *argv[])
   size_t len = 0;
   int amount = 0;
 
-  if(!input_flag)
-    f_in = stdin;
 
   while ((read = getline(&line, &len, f_in)) != -1)
   {
@@ -100,8 +100,7 @@ int main(int argc, char *argv[])
     amount = tp1_line_to_array(line, array_num, read / sizeof(char));
     if (amount != -1) {
       merge_sort(array_num, amount);
-      if(output_flag) tp1_write_array_in_file(array_num, amount, f_out);
-      else tp1_write_array_to_stdout(array_num, amount);
+      tp1_write_array_in_file(array_num, amount, f_out);
     } else {
       fprintf(stderr, "There are errors in the input, cant ensure a valid output\n");
     }
@@ -122,15 +121,6 @@ void tp1_write_array_in_file(int *num, int size, FILE *file)
     fputc(' ', file);
   }
   fputc('\n', file);
-}
-
-void tp1_write_array_to_stdout(int *num, int size)
-{
-  int i = 0;
-  for (; i < size; i++) {
-    fprintf(stdout, "%d", num[i]);
-    fputc(' ', stdout);
-  }
 }
 
 void tp1_print_array(int A[], int size)
@@ -161,18 +151,8 @@ int tp1_line_to_array(char *line, int *array_num, int len)
       ++i;
       line++;
     }
-    int aux = atoi(line);
-    digits = numDigits(aux);
-
-    char *word = malloc(digits * sizeof(char));
-    for (int m = 0; m < digits; m++)
-    {
-      word[m] = line[m];
-    }
-    if (aux == 0 && word[0] != '0')
-      return -1;
-    array_num[j] = aux;
-
+    array_num[j] = atoi(line);
+    digits = numDigits(array_num[j]);
     i = digits + i;
     line = line + digits;
     if (i >= len)
