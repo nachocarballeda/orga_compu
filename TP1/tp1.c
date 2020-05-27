@@ -7,8 +7,6 @@
 
 static int input_flag = 0, output_flag = 0;
 
-void tp1_write_array_to_stdout(int *num, int size);
-
 int main(int argc, char *argv[])
 {
   FILE *f_in;
@@ -69,19 +67,25 @@ int main(int argc, char *argv[])
       abort();
     }
   }
-  
-  if(input_flag)
+
+  if (input_flag)
     f_in = fopen(filename_in, "r");
+  else
+    f_in = stdin;
 
-  if(output_flag)
+  if (output_flag)
     f_out = fopen(filename_out, "w");
+  else
+    f_out = stdout;
 
-  if(input_flag && f_in == NULL) {
+  if (input_flag && f_in == NULL)
+  {
     fprintf(stderr, "Input file '%s' does not exist.\n", filename_in);
     return 1;
   }
 
-  if(output_flag && f_out == NULL) {
+  if (output_flag && f_out == NULL)
+  {
     fprintf(stderr, "Output file '%s' does not exist.\n", filename_out);
     return 1;
   }
@@ -91,18 +95,17 @@ int main(int argc, char *argv[])
   size_t len = 0;
   int amount = 0;
 
-  if(!input_flag)
-    f_in = stdin;
-
   while ((read = getline(&line, &len, f_in)) != -1)
   {
     array_num = (int *)malloc((read / sizeof(char) / 2) * sizeof(int));
     amount = tp1_line_to_array(line, array_num, read / sizeof(char));
-    if (amount != -1) {
+    if (amount != -1)
+    {
       merge_sort(array_num, amount);
-      if(output_flag) tp1_write_array_in_file(array_num, amount, f_out);
-      else tp1_write_array_to_stdout(array_num, amount);
-    } else {
+      tp1_write_array_in_file(array_num, amount, f_out);
+    }
+    else
+    {
       fprintf(stderr, "There are errors in the input, cant ensure a valid output\n");
     }
   }
@@ -117,20 +120,12 @@ int main(int argc, char *argv[])
 void tp1_write_array_in_file(int *num, int size, FILE *file)
 {
   int i = 0;
-  for (; i < size; i++) {
+  for (; i < size; i++)
+  {
     fprintf(file, "%d", num[i]);
     fputc(' ', file);
   }
   fputc('\n', file);
-}
-
-void tp1_write_array_to_stdout(int *num, int size)
-{
-  int i = 0;
-  for (; i < size; i++) {
-    fprintf(stdout, "%d", num[i]);
-    fputc(' ', stdout);
-  }
 }
 
 void tp1_print_array(int A[], int size)
@@ -163,16 +158,14 @@ int tp1_line_to_array(char *line, int *array_num, int len)
     }
     int aux = atoi(line);
     digits = numDigits(aux);
-
     char *word = malloc(digits * sizeof(char));
     for (int m = 0; m < digits; m++)
     {
       word[m] = line[m];
     }
-    if (aux == 0 && word[0] != '0')
+    if (aux == 0 && word[0] != '0' && word[0] != '\n')
       return -1;
     array_num[j] = aux;
-
     i = digits + i;
     line = line + digits;
     if (i >= len)
