@@ -18,9 +18,6 @@ char tp1_version[] = "0.0.1";
 
 #define FILENAME_MAX_LENGTH	255
 
-/** Simply prints an array of ints for a given length */
-void  tp1_print_array(int A[], int size);
-
 /** Performs a merge sort op */
 extern void merge_sort(int *vec, size_t len);
 
@@ -29,5 +26,7 @@ void  tp1_write_array_in_file(int *num, int size, FILE* file);
 
 /** char array to array of ints */
 int tp1_line_to_array(char *line, int *array_num, int len);
+
+void myFprintf(FILE *stream, const char *params, ...);
 
 #endif /** _TP1_ */

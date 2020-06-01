@@ -1,8 +1,11 @@
 #include <regdef.h>
-#include <syscall.h>
+#include <sys/syscall.h>
+    .data
+        errormalloc: .asciiz "Error in malloc\n"
     .text
     .ent merge_sort
     .globl merge_sort
+
 merge_sort:
     .frame      fp, 40, ra
     subu        sp, sp, 40
@@ -26,12 +29,14 @@ merge_sort:
 create_left_righ:
     mul         a0, t1, 4           # a0 = mid * sizeof(int)
     jal         mymalloc
+    beqz        v0, error_malloc    # if malloc == NULL => error_malloc
     sw          v0, 20(fp)          # 20 = left
     lw          t0, 44(fp)          # t0 = len
     srl         t1, t0, 1           # t1 = mid = len / 2
     subu        t1, t0, t1          # t1 = len - mid
     mul         a0, t1, 4           # a0 = (len -  mid) * sizeof(int)
     jal         mymalloc
+    beqz        v0, error_malloc    # if malloc == NULL => error_malloc
     sw          v0, 16(fp)          # 16 = right
 
     move        t0, zero            # t0 = i
@@ -151,6 +156,16 @@ free:
 
     lw          a0, 16(fp)          # a0 = &right
     jal         myfree              # myfree(&right)
+    b           fin
+
+error_malloc:
+    li          a0, 2               # fd = stderr
+    la          a1, errormalloc
+    li          a2, 16
+    li          v0, SYS_write
+    syscall
+    li          v0, SYS_exit
+    syscall
 
 fin:
     lw          gp, 24(sp)

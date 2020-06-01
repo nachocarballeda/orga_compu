@@ -7,7 +7,12 @@ void merge_sort(int *vec, size_t len)
     {
         int mid = len / 2;
         int *left = (int *)malloc(mid * sizeof(int));
+        if (left == NULL)
+            fprintf(stderr, "Error in malloc\n");
+
         int *right = (int *)malloc((len - mid) * sizeof(int));
+        if (right == NULL)
+            fprintf(stderr, "Error in malloc\n");
         for (int i = 0; i < mid; i++)
             left[i] = vec[i];
         for (int i = mid; i < len; i++)
@@ -34,8 +39,9 @@ void merge_sort(int *vec, size_t len)
     }
 }
 
-int main(void) {
-  int vec[]={123,-124,-10,124,124,5,54,6,7,8,90,98,54,2123};
-  merge_sort(vec, sizeof(vec)/sizeof(int));
-  return 0;
+int main(void)
+{
+    int vec[] = {123, -124, -10, 124, 124, 5, 54, 6, 7, 8, 90, 98, 54, 2123};
+    merge_sort(vec, sizeof(vec) / sizeof(int));
+    return 0;
 }
