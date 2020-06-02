@@ -17,8 +17,6 @@ int main(int argc, char *argv[])
   char filename_out[FILENAME_MAX_LENGTH];
   /* getopt_long stores the option index here. */
   int option_index = 0;
-  /* Some Aux vars */
-  int *array_num;
 
   while (1)
   {
@@ -93,26 +91,33 @@ int main(int argc, char *argv[])
   ssize_t read;
   char *line = NULL;
   size_t len = 0;
-  int amount = 0;
+  int ok = 0;
 
   while ((read = getline(&line, &len, f_in)) != -1)
   {
-    int spaces = 0;
-    for (int i = 0; i < read; i++)
+    int numbers = 0;
+    int i = 0;
+    while (line[i] == ' ' && i < read)
+      i++;
+    int j = read - 1;
+    while (line[j] == '\n' || line[j] == ' ')
+      j--;
+    for (; i < j; i++)
     {
-      if (line[i] == ' ')
-        spaces++;
+      if (line[i] == ' ' && line[i - 1] != ' ')
+        numbers++;
     }
-    array_num = (int *)malloc((spaces + 1) * sizeof(int));
+    numbers++;
+    int *array_num = (int *)malloc(numbers * sizeof(int));
     if (array_num == NULL)
       myFprintf(stderr, "Error in malloc\n");
-    amount = tp1_line_to_array(line, array_num, read / sizeof(char));
-    if (amount > 0)
+    ok = tp1_line_to_array(line, array_num, j);
+    if (ok > 0)
     {
-      merge_sort(array_num, amount);
-      tp1_write_array_in_file(array_num, amount, f_out);
+      merge_sort(array_num, numbers);
+      tp1_write_array_in_file(array_num, numbers, f_out);
     }
-    else if (amount == -1)
+    else if (ok < 0)
       myFprintf(stderr, "There are errors in the input, cant ensure a valid output\n");
     free(array_num);
   }
@@ -144,8 +149,9 @@ int numDigits(int n)
 
 int tp1_line_to_array(char *line, int *array_num, int len)
 {
-  int i = 0, j = 0, digits = 0;
-  while (i <= len)
+  size_t j = 0;
+  int i = 0, digits = 0;
+  while (i < len)
   {
     while (*line == ' ')
     {
@@ -166,11 +172,9 @@ int tp1_line_to_array(char *line, int *array_num, int len)
     if (aux == 0 && word[0] != '0' && word[0] != '\n')
       return -1;
     free(word);
-    array_num[j] = aux;
-    i = digits + i;
     line = line + digits;
-    if (i >= len)
-      break;
+    i = digits + i;
+    array_num[j] = aux;
     j++;
   }
   return j;
