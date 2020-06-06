@@ -169,11 +169,23 @@ int tp1_line_to_array(char *line, int *array_num, int len)
     {
       word[m] = line[m];
     }
-    if (aux == 0 && word[0] != '0' && word[0] != '\n')
-      return -1;
+    int r = 0;
+    if (aux == 0) // && word[0] != '0' && word[0] != '\n')
+    {
+      if (word[0] == '\n')
+        r = 1;
+      if (r != 1 && word[0] != '0')
+        r = -1;
+    }
     free(word);
+    if (r == 1)
+      return j;
+    if (r == -1)
+      return r;
+    while (line[digits] != ' ' && line[digits] != '\n' && line[digits] != '\0')
+      digits++;
     line = line + digits;
-    i = digits + i;
+    i = digits + 1;
     array_num[j] = aux;
     j++;
   }
