@@ -1,0 +1,22 @@
+==585== Cachegrind, a cache and branch-prediction profiler
+==585== Copyright (C) 2002-2017, and GNU GPL'd, by Nicholas Nethercote et al.
+==585== Using Valgrind-3.15.0 and LibVEX; rerun with -h for copyright info
+==585== Command: /tmp/benchmark-b1
+==585== 
+==585== 
+==585== I   refs:      481,388
+==585== I1  misses:    122,723
+==585== LLi misses:    122,723
+==585== I1  miss rate:   25.49%
+==585== LLi miss rate:   25.49%
+==585== 
+==585== D   refs:      102,129  (63,735 rd   + 38,394 wr)
+==585== D1  misses:     48,851  (36,177 rd   + 12,674 wr)
+==585== LLd misses:     48,851  (36,177 rd   + 12,674 wr)
+==585== D1  miss rate:    47.8% (  56.8%     +   33.0%  )
+==585== LLd miss rate:    47.8% (  56.8%     +   33.0%  )
+==585== 
+==585== LL refs:       171,574  (158,900 rd   + 12,674 wr)
+==585== LL misses:     171,574  (158,900 rd   + 12,674 wr)
+==585== LL miss rate:     29.4% (  29.1%     +   33.0%  )
+
