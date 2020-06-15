@@ -74,3 +74,33 @@ Dado que la pseudoinstruccion la es en verdad 2 instrucciones (lw y addiu), las 
     ...
     ####################
 
+
+
+
+
+
+
+256    0    0 256  256  256   0    0    0  loop:	lw	t4, 0(t0)
+256    0    0 256  256  256   0    0    0  	lw	t5, 0(t1)
+256    1    1   0    0    0   0    0    0  	addu	t6, t5, t4
+256    0    0   0    0    0 256  256  256  	sw	t6, 0(t2)
+256    0    0   0    0    0   0    0    0  	addu	t0, t0, 4
+256    0    0   0    0    0   0    0    0  	addu	t1, t1, 4
+256    1    1   0    0    0   0    0    0  	addu	t2, t2, 4
+256    0    0   0    0    0   0    0    0  	subu	t3, t3, 1
+256    0    0   0    0    0   0    0    0  	bnez	t3, loop
+
+
+
+
+lw1 : t0, t0-4, t0-8, t0-12
+lw2 : t1, t1-4, t1-8, t1-12
+sw  : t2
+
+
+####
+0x0
+0x4
+0x8
+0xC             <- t0
+####

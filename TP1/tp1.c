@@ -108,6 +108,7 @@ int main(int argc, char *argv[])
         numbers++;
     }
     numbers++;
+    j++;
     int *array_num = (int *)malloc(numbers * sizeof(int));
     if (array_num == NULL)
       myFprintf(stderr, "Error in malloc\n");
@@ -117,11 +118,11 @@ int main(int argc, char *argv[])
       merge_sort(array_num, numbers);
       tp1_write_array_in_file(array_num, numbers, f_out);
     }
-    else if (ok < 0)
+    else if (ok == -1)
       myFprintf(stderr, "There are errors in the input, cant ensure a valid output\n");
     free(array_num);
   }
-
+  free(line);
   fclose(f_in);
   fclose(f_out);
   return 0;
@@ -164,15 +165,16 @@ int tp1_line_to_array(char *line, int *array_num, int len)
     if (word == NULL)
     {
       myFprintf(stderr, "Error in malloc\n");
+      return -2;
     }
     for (int m = 0; m < digits; m++)
     {
       word[m] = line[m];
     }
     int r = 0;
-    if (aux == 0) // && word[0] != '0' && word[0] != '\n')
+    if (aux == 0)
     {
-      if (word[0] == '\n')
+      if (word[0] == '\n' || word[0] == '\0')
         r = 1;
       if (r != 1 && word[0] != '0')
         r = -1;
